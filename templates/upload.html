@@ -1,0 +1,246 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- Page Heading -->
+
+    <div class="text-center mb-5">
+
+        <h1 class="fw-bold">
+            <i class="bi bi-cloud-arrow-up-fill text-primary"></i>
+            Upload Your Dataset
+        </h1>
+
+        <p class="text-secondary fs-5">
+            Upload a CSV or Excel file and let InsightIQ analyze your business data.
+        </p>
+
+    </div>
+
+    <!-- Upload Card -->
+
+    <div class="card shadow-lg p-5">
+
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+
+            <label for="fileInput" class="upload-area">
+
+                <div class="upload-icon">
+                    <i class="bi bi-cloud-arrow-up-fill"></i>
+                </div>
+
+                <h2>Drag & Drop your Dataset</h2>
+
+                <p>
+                    CSV (.csv), Excel (.xlsx, .xls)
+                </p>
+
+                <input
+                    type="file"
+                    id="fileInput"
+                    name="dataset"
+                    accept=".csv,.xlsx,.xls"
+                    hidden
+                    required
+                >
+
+                <div class="browse-btn">
+                    <i class="bi bi-folder2-open"></i>
+                    Browse Files
+                </div>
+
+                <div id="file-name" class="mt-3">
+                    No file selected
+                </div>
+
+            </label>
+
+            <div class="text-center mt-4">
+
+                <button class="btn btn-primary btn-lg px-5">
+
+                    <i class="bi bi-upload"></i>
+
+                    Upload Dataset
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+
+    <!-- Error -->
+
+    {% if error %}
+
+    <div class="alert alert-danger mt-4">
+
+        {{ error }}
+
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- Success -->
+
+    {% if success %}
+
+    <div class="alert alert-success mt-4">
+
+        <h4>
+
+            <i class="bi bi-check-circle-fill"></i>
+
+            Dataset Uploaded Successfully
+
+        </h4>
+
+    </div>
+
+
+
+    <!-- Summary Cards -->
+
+    <div class="row mt-4 g-4">
+
+        <div class="col-md-3">
+
+            <div class="card p-4 text-center h-100">
+
+                <h6 class="text-secondary">
+
+                    File Name
+
+                </h6>
+
+                <h5 class="mt-2">
+
+                    {{ filename }}
+
+                </h5>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="col-md-3">
+
+            <div class="card p-4 text-center h-100">
+
+                <h6 class="text-secondary">
+
+                    Rows
+
+                </h6>
+
+                <h2>
+
+                    {{ rows }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="col-md-3">
+
+            <div class="card p-4 text-center h-100">
+
+                <h6 class="text-secondary">
+
+                    Columns
+
+                </h6>
+
+                <h2>
+
+                    {{ columns }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="col-md-3">
+
+            <div class="card p-4 text-center h-100">
+
+                <h6 class="text-secondary">
+
+                    File Type
+
+                </h6>
+
+                <h2>
+
+                    {{ filetype }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Dataset Preview -->
+
+    <div class="card mt-5 p-4">
+
+        <h3 class="mb-4">
+
+            <i class="bi bi-table"></i>
+
+            Dataset Preview
+
+        </h3>
+
+        <div class="table-responsive">
+
+            {{ preview|safe }}
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Continue Button -->
+
+    <div class="text-center mt-5">
+
+        <a href="/dashboard"
+
+           class="btn btn-success btn-lg px-5">
+
+            Continue to Dashboard
+
+            <i class="bi bi-arrow-right-circle-fill"></i>
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

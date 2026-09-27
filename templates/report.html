@@ -1,0 +1,1394 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- ================= REPORT HEADER ================= -->
+
+    <div class="report-header mb-5">
+
+        <div>
+
+            <span class="report-badge">
+                <i class="bi bi-file-earmark-bar-graph"></i>
+                INSIGHTIQ REPORT
+            </span>
+
+            <h1 class="report-title mt-3">
+                Business Analytics Report
+            </h1>
+
+            <p class="report-subtitle">
+                A comprehensive overview of your uploaded
+                dataset and key business insights.
+            </p>
+
+        </div>
+
+        <div class="report-actions">
+
+            <a
+                href="/download-report"
+                class="btn btn-primary report-download-btn">
+
+                <i class="bi bi-download"></i>
+
+                Download Report
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= REPORT STATUS ================= -->
+
+    {% if nodata %}
+
+    <div class="report-status-card mb-4">
+
+        <div class="status-icon">
+
+            <i class="bi bi-exclamation-circle-fill"></i>
+
+        </div>
+
+        <div>
+
+            <h5>No Dataset Available</h5>
+
+            <p>
+                Please upload a dataset before generating a report.
+            </p>
+
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <div class="report-status-card mb-4">
+
+        <div class="status-icon">
+
+            <i class="bi bi-check-circle-fill"></i>
+
+        </div>
+
+        <div>
+
+            <h5>Report Ready</h5>
+
+            <p>
+                Your InsightIQ analytics report is ready to review.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= KPI CARDS ================= -->
+
+    <div class="row g-4 mb-5">
+
+
+        <!-- RECORDS -->
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="report-card kpi-card">
+
+                <div class="kpi-icon">
+
+                    <i class="bi bi-database"></i>
+
+                </div>
+
+                <div>
+
+                    <p class="kpi-label">
+                        Total Records
+                    </p>
+
+                    <h2 class="kpi-value">
+                        {{ rows }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- COLUMNS -->
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="report-card kpi-card">
+
+                <div class="kpi-icon">
+
+                    <i class="bi bi-layout-three-columns"></i>
+
+                </div>
+
+                <div>
+
+                    <p class="kpi-label">
+                        Total Columns
+                    </p>
+
+                    <h2 class="kpi-value">
+                        {{ columns }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- MISSING VALUES -->
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="report-card kpi-card">
+
+                <div class="kpi-icon">
+
+                    <i class="bi bi-exclamation-triangle"></i>
+
+                </div>
+
+                <div>
+
+                    <p class="kpi-label">
+                        Missing Values
+                    </p>
+
+                    <h2 class="kpi-value">
+                        {{ missing_values }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DUPLICATES -->
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="report-card kpi-card">
+
+                <div class="kpi-icon">
+
+                    <i class="bi bi-copy"></i>
+
+                </div>
+
+                <div>
+
+                    <p class="kpi-label">
+                        Duplicate Rows
+                    </p>
+
+                    <h2 class="kpi-value">
+                        {{ duplicate_rows }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= EXECUTIVE SUMMARY ================= -->
+
+    <div class="report-section mb-5">
+
+        <div class="section-heading">
+
+            <div class="section-icon">
+
+                <i class="bi bi-clipboard-data"></i>
+
+            </div>
+
+            <div>
+
+                <h2>
+                    Executive Summary
+                </h2>
+
+                <p>
+                    A quick overview of the uploaded dataset.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="report-content-card">
+
+            <p class="summary-text">
+
+                InsightIQ analyzed your dataset containing
+                <strong>{{ rows }}</strong> records and
+                <strong>{{ columns }}</strong> columns.
+
+                The analysis identified
+                <strong>{{ missing_values }}</strong>
+                missing values and
+                <strong>{{ duplicate_rows }}</strong>
+                duplicate rows.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= DATASET QUALITY ================= -->
+
+    <div class="report-section mb-5">
+
+        <div class="section-heading">
+
+            <div class="section-icon">
+
+                <i class="bi bi-shield-check"></i>
+
+            </div>
+
+            <div>
+
+                <h2>
+                    Data Quality
+                </h2>
+
+                <p>
+                    Overview of the quality of your dataset.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="row g-4">
+
+
+            <!-- MISSING VALUES -->
+
+            <div class="col-md-6">
+
+                <div class="quality-card">
+
+                    <div class="quality-top">
+
+                        <span>
+                            Missing Values
+                        </span>
+
+                        {% if missing_values == 0 %}
+
+                        <i class="bi bi-check-circle"></i>
+
+                        {% else %}
+
+                        <i class="bi bi-exclamation-triangle"></i>
+
+                        {% endif %}
+
+                    </div>
+
+                    <p>
+
+                        {% if missing_values == 0 %}
+
+                        No missing values were detected
+                        in the uploaded dataset.
+
+                        {% else %}
+
+                        The dataset contains
+                        <strong>{{ missing_values }}</strong>
+                        missing values.
+
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- DUPLICATES -->
+
+            <div class="col-md-6">
+
+                <div class="quality-card">
+
+                    <div class="quality-top">
+
+                        <span>
+                            Duplicate Records
+                        </span>
+
+                        {% if duplicate_rows == 0 %}
+
+                        <i class="bi bi-check-circle"></i>
+
+                        {% else %}
+
+                        <i class="bi bi-exclamation-triangle"></i>
+
+                        {% endif %}
+
+                    </div>
+
+                    <p>
+
+                        {% if duplicate_rows == 0 %}
+
+                        No duplicate rows were detected.
+
+                        {% else %}
+
+                        <strong>{{ duplicate_rows }}</strong>
+                        duplicate rows were detected.
+
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= ANALYTICS SUMMARY ================= -->
+
+    <div class="report-section mb-5">
+
+        <div class="section-heading">
+
+            <div class="section-icon">
+
+                <i class="bi bi-bar-chart-line"></i>
+
+            </div>
+
+            <div>
+
+                <h2>
+                    Analytics Summary
+                </h2>
+
+                <p>
+                    Key numerical and categorical analysis.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="row g-4">
+
+
+            <!-- ================= NUMERICAL ================= -->
+
+            <div class="col-lg-7">
+
+                <div class="report-content-card">
+
+                    <div class="card-heading">
+
+                        <i class="bi bi-123"></i>
+
+                        Numerical Analysis
+
+                    </div>
+
+                    {% if numeric_data %}
+
+                    <div class="table-responsive">
+
+                        <table class="table report-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Column</th>
+
+                                    <th>Average</th>
+
+                                    <th>Minimum</th>
+
+                                    <th>Maximum</th>
+
+                                    <th>Total</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                {% for item in numeric_data %}
+
+                                <tr>
+
+                                    <td>
+                                        <strong>
+                                            {{ item.name }}
+                                        </strong>
+                                    </td>
+
+                                    <td>
+                                        {{ "{:,.2f}".format(item.average) }}
+                                    </td>
+
+                                    <td>
+                                        {{ "{:,.2f}".format(item.minimum) }}
+                                    </td>
+
+                                    <td>
+                                        {{ "{:,.2f}".format(item.maximum) }}
+                                    </td>
+
+                                    <td>
+                                        {{ "{:,.2f}".format(item.total) }}
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    {% else %}
+
+                    <div class="empty-report-box">
+
+                        <i class="bi bi-bar-chart"></i>
+
+                        <span>
+                            No numerical columns were detected
+                            in the uploaded dataset.
+                        </span>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= CATEGORICAL ================= -->
+
+            <div class="col-lg-5">
+
+                <div class="report-content-card">
+
+                    <div class="card-heading">
+
+                        <i class="bi bi-pie-chart"></i>
+
+                        Categorical Analysis
+
+                    </div>
+
+                    {% if category_column %}
+
+                    <p>
+
+                        The primary categorical column is:
+
+                        <strong>
+                            {{ category_column }}
+                        </strong>
+
+                    </p>
+
+
+                    {% if category_top_value %}
+
+                    <div class="category-highlight">
+
+                        <div class="category-icon">
+
+                            <i class="bi bi-trophy-fill"></i>
+
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Most Frequent Value
+                            </span>
+
+                            <h4>
+                                {{ category_top_value }}
+                            </h4>
+
+                            <p>
+                                Appears
+                                <strong>
+                                    {{ category_top_count }}
+                                </strong>
+                                times.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+                    {% else %}
+
+                    <div class="empty-report-box">
+
+                        <i class="bi bi-pie-chart"></i>
+
+                        <span>
+                            No categorical columns were detected
+                            in the uploaded dataset.
+                        </span>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= KEY INSIGHTS ================= -->
+
+    <div class="report-section mb-5">
+
+        <div class="section-heading">
+
+            <div class="section-icon">
+
+                <i class="bi bi-stars"></i>
+
+            </div>
+
+            <div>
+
+                <h2>
+                    Key Insights
+                </h2>
+
+                <p>
+                    Important findings identified by InsightIQ.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="insights-list">
+
+            {% if insights %}
+
+                {% for insight in insights %}
+
+                <div class="insight-item">
+
+                    <div class="insight-number">
+
+                        {{ "%02d"|format(loop.index) }}
+
+                    </div>
+
+                    <div>
+
+                        <h5>
+                            Insight {{ loop.index }}
+                        </h5>
+
+                        <p>
+                            {{ insight }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="insight-item">
+
+                    <div class="insight-number">
+                        01
+                    </div>
+
+                    <div>
+
+                        <h5>
+                            No Insights Available
+                        </h5>
+
+                        <p>
+                            There is not enough information
+                            to generate automatic insights.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= REPORT FOOTER ================= -->
+
+    <div class="report-final-card">
+
+        <div>
+
+            <i class="bi bi-stars"></i>
+
+            <h3>
+                Powered by InsightIQ
+            </h3>
+
+            <p>
+                Turning raw data into meaningful
+                business insights.
+            </p>
+
+        </div>
+
+        <a
+            href="/dashboard"
+            class="btn btn-outline-light">
+
+            <i class="bi bi-arrow-left"></i>
+
+            Back to Dashboard
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- ================================================== -->
+<!-- REPORT PAGE STYLES -->
+<!-- ================================================== -->
+
+<style>
+
+.report-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 30px;
+
+}
+
+.report-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 8px 15px;
+
+    border-radius: 30px;
+
+    background: rgba(139, 92, 246, 0.15);
+
+    border: 1px solid rgba(139, 92, 246, 0.3);
+
+    color: #b99cff;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+}
+
+.report-title {
+
+    font-size: 42px;
+
+    font-weight: 800;
+
+}
+
+.report-subtitle {
+
+    color: #aeb6d3;
+
+    font-size: 17px;
+
+    max-width: 650px;
+
+}
+
+.report-download-btn {
+
+    padding: 13px 22px;
+
+    border-radius: 12px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+}
+
+.report-status-card {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    padding: 22px;
+
+    border-radius: 18px;
+
+    background: rgba(30, 41, 70, 0.7);
+
+    border: 1px solid rgba(139, 92, 246, 0.25);
+
+}
+
+.status-icon {
+
+    width: 48px;
+
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: rgba(34, 197, 94, 0.15);
+
+    color: #6ee7a1;
+
+    font-size: 22px;
+
+}
+
+.report-status-card h5 {
+
+    margin: 0 0 4px;
+
+    font-weight: 700;
+
+}
+
+.report-status-card p {
+
+    margin: 0;
+
+    color: #aeb6d3;
+
+}
+
+.report-card {
+
+    padding: 25px;
+
+    border-radius: 18px;
+
+    background: rgba(30, 41, 70, 0.7);
+
+    border: 1px solid rgba(139, 92, 246, 0.2);
+
+}
+
+.kpi-card {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 17px;
+
+    height: 100%;
+
+}
+
+.kpi-icon {
+
+    width: 52px;
+
+    height: 52px;
+
+    min-width: 52px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background: rgba(139, 92, 246, 0.15);
+
+    color: #a78bfa;
+
+    font-size: 23px;
+
+}
+
+.kpi-label {
+
+    margin: 0 0 5px;
+
+    color: #aeb6d3;
+
+    font-size: 13px;
+
+}
+
+.kpi-value {
+
+    margin: 0;
+
+    font-size: 28px;
+
+    font-weight: 800;
+
+}
+
+.section-heading {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 22px;
+
+}
+
+.section-icon {
+
+    width: 46px;
+
+    height: 46px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: rgba(139, 92, 246, 0.15);
+
+    color: #a78bfa;
+
+    font-size: 21px;
+
+}
+
+.section-heading h2 {
+
+    margin: 0;
+
+    font-size: 24px;
+
+    font-weight: 750;
+
+}
+
+.section-heading p {
+
+    margin: 4px 0 0;
+
+    color: #9ca7c7;
+
+}
+
+.report-content-card {
+
+    padding: 28px;
+
+    border-radius: 18px;
+
+    background: rgba(30, 41, 70, 0.65);
+
+    border: 1px solid rgba(139, 92, 246, 0.18);
+
+    height: 100%;
+
+}
+
+.summary-text {
+
+    color: #c6cee4;
+
+    line-height: 1.8;
+
+    margin: 0;
+
+}
+
+.quality-card {
+
+    padding: 24px;
+
+    border-radius: 17px;
+
+    background: rgba(30, 41, 70, 0.65);
+
+    border: 1px solid rgba(139, 92, 246, 0.18);
+
+}
+
+.quality-top {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    font-weight: 700;
+
+    margin-bottom: 12px;
+
+}
+
+.quality-top i {
+
+    color: #6ee7a1;
+
+}
+
+.quality-card p {
+
+    margin: 0;
+
+    color: #aeb6d3;
+
+    line-height: 1.7;
+
+}
+
+.card-heading {
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    margin-bottom: 15px;
+
+}
+
+.card-heading i {
+
+    color: #a78bfa;
+
+    margin-right: 8px;
+
+}
+
+.report-content-card > p {
+
+    color: #aeb6d3;
+
+    line-height: 1.7;
+
+}
+
+.empty-report-box {
+
+    min-height: 130px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 10px;
+
+    text-align: center;
+
+    padding: 20px;
+
+    border-radius: 14px;
+
+    border: 1px dashed rgba(167, 139, 250, 0.3);
+
+    background: rgba(15, 23, 42, 0.25);
+
+    color: #929cbb;
+
+}
+
+.empty-report-box i {
+
+    font-size: 30px;
+
+    color: #8b5cf6;
+
+}
+
+
+/* ================= NUMERICAL TABLE ================= */
+
+.report-table {
+
+    margin-top: 15px;
+
+    color: #d7dcef;
+
+    vertical-align: middle;
+
+}
+
+.report-table th {
+
+    background: rgba(109, 40, 217, 0.35);
+
+    color: #ffffff;
+
+    font-weight: 700;
+
+    border-color: rgba(139, 92, 246, 0.2);
+
+    padding: 12px;
+
+}
+
+.report-table td {
+
+    background: rgba(15, 23, 42, 0.25);
+
+    color: #cbd3e8;
+
+    border-color: rgba(139, 92, 246, 0.15);
+
+    padding: 12px;
+
+}
+
+.report-table tbody tr:hover td {
+
+    background: rgba(139, 92, 246, 0.1);
+
+}
+
+
+/* ================= CATEGORY HIGHLIGHT ================= */
+
+.category-highlight {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    margin-top: 20px;
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    background: rgba(139, 92, 246, 0.1);
+
+    border: 1px solid rgba(139, 92, 246, 0.2);
+
+}
+
+.category-icon {
+
+    width: 50px;
+
+    height: 50px;
+
+    min-width: 50px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: rgba(139, 92, 246, 0.18);
+
+    color: #c4b5fd;
+
+    font-size: 21px;
+
+}
+
+.category-highlight span {
+
+    color: #9ca7c7;
+
+    font-size: 12px;
+
+}
+
+.category-highlight h4 {
+
+    margin: 4px 0;
+
+    font-weight: 750;
+
+}
+
+.category-highlight p {
+
+    margin: 0;
+
+    color: #aeb6d3;
+
+    font-size: 14px;
+
+}
+
+
+.insights-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+
+}
+
+.insight-item {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 18px;
+
+    padding: 23px;
+
+    border-radius: 17px;
+
+    background: rgba(30, 41, 70, 0.65);
+
+    border: 1px solid rgba(139, 92, 246, 0.18);
+
+}
+
+.insight-number {
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    color: #a78bfa;
+
+    padding-top: 3px;
+
+}
+
+.insight-item h5 {
+
+    margin: 0 0 6px;
+
+    font-weight: 700;
+
+}
+
+.insight-item p {
+
+    margin: 0;
+
+    color: #aeb6d3;
+
+    line-height: 1.6;
+
+}
+
+.report-final-card {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 25px;
+
+    padding: 30px;
+
+    margin-top: 50px;
+
+    margin-bottom: 30px;
+
+    border-radius: 20px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(91, 33, 182, 0.8),
+        rgba(76, 29, 149, 0.7)
+    );
+
+    border: 1px solid rgba(167, 139, 250, 0.35);
+
+}
+
+.report-final-card h3 {
+
+    margin: 8px 0 5px;
+
+    font-weight: 750;
+
+}
+
+.report-final-card p {
+
+    margin: 0;
+
+    color: #d7d4f5;
+
+}
+
+.report-final-card > div > i {
+
+    font-size: 25px;
+
+}
+
+
+@media (max-width: 768px) {
+
+    .report-header {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+    }
+
+    .report-title {
+
+        font-size: 32px;
+
+    }
+
+    .report-final-card {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+    }
+
+}
+
+
+/* ================= PRINT ================= */
+
+@media print {
+
+    .insight-navbar,
+    .insight-footer,
+    .report-actions,
+    .report-final-card a {
+
+        display: none !important;
+
+    }
+
+    body {
+
+        background: white !important;
+
+    }
+
+    .report-card,
+    .report-content-card,
+    .quality-card,
+    .insight-item,
+    .report-status-card {
+
+        color: black !important;
+
+        background: white !important;
+
+        border: 1px solid #ddd !important;
+
+    }
+
+}
+
+</style>
+
+{% endblock %}

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="InsightIQ - AI Powered Business Analytics Platform">
+
+    <title>
+        {% if title %}
+            {{ title }} | InsightIQ
+        {% else %}
+            InsightIQ
+        {% endif %}
+    </title>
+
+
+    <!-- Google Font -->
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+
+    <!-- Bootstrap -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+
+    <!-- Bootstrap Icons -->
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+    <!-- Custom CSS -->
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- Background Effects -->
+
+<div class="background-glow glow-one"></div>
+
+<div class="background-glow glow-two"></div>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar navbar-expand-lg navbar-dark insight-navbar">
+
+    <div class="container">
+
+
+        <!-- LOGO -->
+
+        <a class="navbar-brand insight-logo"
+           href="/">
+
+            <span class="logo-icon">
+
+                <i class="bi bi-bar-chart-fill"></i>
+
+            </span>
+
+            Insight<span>IQ</span>
+
+        </a>
+
+
+        <!-- MOBILE BUTTON -->
+
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+
+        <!-- NAVIGATION -->
+
+        <div class="collapse navbar-collapse"
+             id="mainNavbar">
+
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+
+
+                <!-- HOME -->
+
+                <li class="nav-item">
+
+                    <a class="nav-link
+                    {% if request.path == '/' %}
+                    active
+                    {% endif %}"
+                    href="/">
+
+                        <i class="bi bi-house-door"></i>
+
+                        Home
+
+                    </a>
+
+                </li>
+
+
+                <!-- UPLOAD -->
+
+                <li class="nav-item">
+
+                    <a class="nav-link
+                    {% if request.path == '/upload' %}
+                    active
+                    {% endif %}"
+                    href="/upload">
+
+                        <i class="bi bi-cloud-arrow-up"></i>
+
+                        Upload
+
+                    </a>
+
+                </li>
+
+
+                <!-- DASHBOARD -->
+
+                <li class="nav-item">
+
+                    <a class="nav-link
+                    {% if request.path == '/dashboard' %}
+                    active
+                    {% endif %}"
+                    href="/dashboard">
+
+                        <i class="bi bi-grid-1x2"></i>
+
+                        Dashboard
+
+                    </a>
+
+                </li>
+
+
+                <!-- REPORTS -->
+
+                <li class="nav-item">
+
+                    <a class="nav-link
+                    {% if request.path == '/reports' %}
+                    active
+                    {% endif %}"
+                    href="/reports">
+
+                        <i class="bi bi-file-earmark-bar-graph"></i>
+
+                        Reports
+
+                    </a>
+
+                </li>
+
+
+                <!-- GET STARTED -->
+
+                <li class="nav-item ms-lg-3">
+
+                    <a href="/upload"
+                       class="nav-start-button">
+
+                        Get Started
+
+                        <i class="bi bi-arrow-right"></i>
+
+                    </a>
+
+                </li>
+
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+
+<!-- ================= MAIN CONTENT ================= -->
+
+
+<main>
+
+    {% block content %}
+
+    {% endblock %}
+
+</main>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+
+<footer class="insight-footer">
+
+    <div class="container">
+
+        <div class="footer-content">
+
+
+            <!-- BRAND -->
+
+            <div>
+
+                <h4>
+
+                    <i class="bi bi-bar-chart-fill"></i>
+
+                    InsightIQ
+
+                </h4>
+
+                <p>
+
+                    AI-powered business intelligence,
+                    simplified.
+
+                </p>
+
+            </div>
+
+
+            <!-- FOOTER LINKS -->
+
+            <div class="footer-links">
+
+                <a href="/">Home</a>
+
+                <a href="/upload">Upload</a>
+
+                <a href="/dashboard">Dashboard</a>
+
+                <a href="/reports">Reports</a>
+
+            </div>
+
+
+        </div>
+
+
+        <hr>
+
+
+        <div class="footer-bottom">
+
+            <p>
+
+                © 2026 InsightIQ
+
+            </p>
+
+            <p>
+
+                Built for smarter business decisions.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+
+<!-- ================= TOAST ================= -->
+
+
+<div id="insightToast"
+     class="insight-toast">
+
+    <i class="bi bi-check-circle-fill"></i>
+
+    <span id="toastMessage">
+
+        Dataset selected successfully
+
+    </span>
+
+</div>
+
+
+
+<!-- ================= BOOTSTRAP ================= -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+
+<!-- ================= INSIGHTIQ JAVASCRIPT ================= -->
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+
+
+<!-- ================= EXISTING JAVASCRIPT ================= -->
+
+
+<script>
+
+
+/* FILE SELECTION */
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const input =
+            document.getElementById("fileInput");
+
+
+        if (input) {
+
+            input.addEventListener(
+                "change",
+                function () {
+
+                    const file =
+                        this.files[0];
+
+
+                    if (file) {
+
+                        const fileName =
+                            document.getElementById(
+                                "file-name"
+                            );
+
+
+                        if (fileName) {
+
+                            fileName.innerHTML =
+
+                                '<i class="bi bi-check-circle-fill"></i> '
+
+                                + file.name;
+
+                        }
+
+
+                        showToast(
+
+                            file.name +
+                            " selected successfully"
+
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+    }
+);
+
+
+
+/* TOAST FUNCTION */
+
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById(
+            "insightToast"
+        );
+
+
+    const toastMessage =
+        document.getElementById(
+            "toastMessage"
+        );
+
+
+    if (!toast || !toastMessage) {
+
+        return;
+
+    }
+
+
+    toastMessage.innerText =
+        message;
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    setTimeout(
+        function () {
+
+            toast.classList.remove(
+                "show"
+            );
+
+        },
+
+        3000
+
+    );
+
+}
+
+
+
+/* NAVBAR SCROLL EFFECT */
+
+
+window.addEventListener(
+
+    "scroll",
+
+    function () {
+
+        const navbar =
+            document.querySelector(
+                ".insight-navbar"
+            );
+
+
+        if (!navbar) {
+
+            return;
+
+        }
+
+
+        if (
+            window.scrollY > 30
+        ) {
+
+            navbar.classList.add(
+                "navbar-scrolled"
+            );
+
+        }
+
+        else {
+
+            navbar.classList.remove(
+                "navbar-scrolled"
+            );
+
+        }
+
+    }
+
+);
+
+
+</script>
+
+
+</body>
+
+</html>

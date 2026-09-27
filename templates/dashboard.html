@@ -1,0 +1,1089 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container py-5 dashboard-page">
+
+    <!-- =====================================
+         DASHBOARD HEADER
+         ===================================== -->
+
+    <div class="text-center mb-5">
+
+        <div class="dashboard-icon">
+            <i class="bi bi-bar-chart-fill"></i>
+        </div>
+
+        <h1 class="dashboard-title">
+            Business Dashboard
+        </h1>
+
+        <p class="dashboard-subtitle">
+            Turn your uploaded data into meaningful business insights.
+        </p>
+
+    </div>
+
+
+    {% if nodata %}
+
+    <!-- =====================================
+         NO DATA
+         ===================================== -->
+
+    <div class="card p-5 text-center dashboard-empty">
+
+        <i class="bi bi-database-x empty-icon"></i>
+
+        <h2>
+            No Dataset Available
+        </h2>
+
+        <p>
+            Upload a CSV or Excel dataset first
+            to start analyzing your data.
+        </p>
+
+        <a
+            href="{{ url_for('upload') }}"
+            class="btn btn-primary mt-3"
+        >
+
+            <i class="bi bi-cloud-upload"></i>
+
+            Upload Dataset
+
+        </a>
+
+    </div>
+
+
+    {% else %}
+
+
+    <!-- =====================================
+         KPI CARDS
+         ===================================== -->
+
+    <div class="row g-4 mb-5">
+
+        <!-- Total Records -->
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card dashboard-card text-center p-4">
+
+                <div class="dashboard-card-icon">
+
+                    <i class="bi bi-database"></i>
+
+                </div>
+
+                <h6>
+                    Total Records
+                </h6>
+
+                <h2>
+                    {{ "{:,}".format(rows) }}
+                </h2>
+
+                <p>
+                    Rows in dataset
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Total Columns -->
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card dashboard-card text-center p-4">
+
+                <div class="dashboard-card-icon">
+
+                    <i class="bi bi-columns-gap"></i>
+
+                </div>
+
+                <h6>
+                    Total Columns
+                </h6>
+
+                <h2>
+                    {{ columns }}
+                </h2>
+
+                <p>
+                    Data attributes
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Missing Values -->
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card dashboard-card text-center p-4">
+
+                <div class="dashboard-card-icon">
+
+                    <i class="bi bi-exclamation-circle"></i>
+
+                </div>
+
+                <h6>
+                    Missing Values
+                </h6>
+
+                <h2>
+                    {{ "{:,}".format(missing_values) }}
+                </h2>
+
+                <p>
+                    Data quality check
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Duplicate Rows -->
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card dashboard-card text-center p-4">
+
+                <div class="dashboard-card-icon">
+
+                    <i class="bi bi-files"></i>
+
+                </div>
+
+                <h6>
+                    Duplicate Rows
+                </h6>
+
+                <h2>
+                    {{ "{:,}".format(duplicate_rows) }}
+                </h2>
+
+                <p>
+                    Duplicate records
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         DATA OVERVIEW
+         ===================================== -->
+
+    <div class="card p-4 mb-5">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>
+
+                    <i class="bi bi-bar-chart-line"></i>
+
+                    Data Overview
+
+                </h2>
+
+                <p>
+                    Summary of the numerical and
+                    categorical information detected
+                    in your dataset.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="row g-4">
+
+
+            <!-- Numerical Columns -->
+
+            <div class="col-lg-6">
+
+                <div class="overview-box">
+
+                    <h5>
+
+                        <i class="bi bi-123"></i>
+
+                        Numerical Columns
+
+                    </h5>
+
+
+                    {% if numeric_columns %}
+
+                    <div class="column-list">
+
+                        {% for column in numeric_columns %}
+
+                        <span class="column-tag">
+
+                            {{ column }}
+
+                        </span>
+
+                        {% endfor %}
+
+                    </div>
+
+                    {% else %}
+
+                    <p>
+                        No numerical columns detected.
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- Categorical Columns -->
+
+            <div class="col-lg-6">
+
+                <div class="overview-box">
+
+                    <h5>
+
+                        <i class="bi bi-tags"></i>
+
+                        Categorical Columns
+
+                    </h5>
+
+
+                    {% if categorical_columns %}
+
+                    <div class="column-list">
+
+                        {% for column in categorical_columns[:12] %}
+
+                        <span class="column-tag">
+
+                            {{ column }}
+
+                        </span>
+
+                        {% endfor %}
+
+                    </div>
+
+                    {% else %}
+
+                    <p>
+                        No categorical columns detected.
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         CHARTS
+         ===================================== -->
+
+    <div class="row g-4 mb-5">
+
+
+        <!-- Numerical Chart -->
+
+        <div class="col-lg-7">
+
+            <div class="card chart-card p-4">
+
+                <h3>
+
+                    <i class="bi bi-graph-up"></i>
+
+                    Numerical Analysis
+
+                </h3>
+
+                <p>
+                    Average values of detected
+                    numerical columns.
+                </p>
+
+
+                {% if numeric_chart_labels %}
+
+                <div class="chart-container">
+
+                    <canvas id="numericChart"></canvas>
+
+                </div>
+
+                {% else %}
+
+                <div class="chart-empty">
+
+                    No numerical data available.
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- Category Chart -->
+
+        <div class="col-lg-5">
+
+            <div class="card chart-card p-4">
+
+                <h3>
+
+                    <i class="bi bi-pie-chart"></i>
+
+                    {% if category_column %}
+
+                    {{ category_column }}
+
+                    {% else %}
+
+                    Category Analysis
+
+                    {% endif %}
+
+                </h3>
+
+                <p>
+                    Distribution of records.
+                </p>
+
+
+                {% if category_labels %}
+
+                <div class="chart-container">
+
+                    <canvas id="categoryChart"></canvas>
+
+                </div>
+
+                {% else %}
+
+                <div class="chart-empty">
+
+                    No suitable categorical
+                    column found.
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         NUMERICAL SUMMARY
+         ===================================== -->
+
+    {% if numeric_data %}
+
+    <div class="card p-4 mb-5">
+
+        <h2>
+
+            <i class="bi bi-table"></i>
+
+            Numerical Summary
+
+        </h2>
+
+        <p>
+            Statistical summary of your
+            numerical columns.
+        </p>
+
+
+        <div class="table-responsive">
+
+            <table class="table table-dark table-hover">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Column
+                        </th>
+
+                        <th>
+                            Average
+                        </th>
+
+                        <th>
+                            Minimum
+                        </th>
+
+                        <th>
+                            Maximum
+                        </th>
+
+                        <th>
+                            Total
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for item in numeric_data %}
+
+                    <tr>
+
+                        <td>
+
+                            <strong>
+                                {{ item.name }}
+                            </strong>
+
+                        </td>
+
+                        <td>
+                            {{ item.average }}
+                        </td>
+
+                        <td>
+                            {{ item.minimum }}
+                        </td>
+
+                        <td>
+                            {{ item.maximum }}
+                        </td>
+
+                        <td>
+                            {{ item.total }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- =====================================
+         INSIGHTIQ ANALYSIS
+         ===================================== -->
+
+    <div class="card p-4 mb-5 insight-card">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>
+
+                    <i class="bi bi-stars"></i>
+
+                    InsightIQ Analysis
+
+                </h2>
+
+                <p>
+                    Automatically generated observations
+                    from your dataset.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="insights-list">
+
+            {% for insight in insights %}
+
+            <div class="insight-item">
+
+                <div class="insight-number">
+
+                    {{ loop.index }}
+
+                </div>
+
+                <div>
+
+                    {{ insight }}
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    {% endif %}
+
+</div>
+
+
+<!-- ==========================================
+     CHART.JS
+     ========================================== -->
+
+{% if not nodata %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<!-- ==========================================
+     SAFE DATA FROM FLASK
+     ========================================== -->
+
+<script
+    id="numeric-labels-data"
+    type="application/json"
+>
+    {{ numeric_chart_labels | tojson }}
+</script>
+
+
+<script
+    id="numeric-values-data"
+    type="application/json"
+>
+    {{ numeric_chart_values | tojson }}
+</script>
+
+
+<script
+    id="category-labels-data"
+    type="application/json"
+>
+    {{ category_labels | tojson }}
+</script>
+
+
+<script
+    id="category-values-data"
+    type="application/json"
+>
+    {{ category_values | tojson }}
+</script>
+
+
+<!-- ==========================================
+     JAVASCRIPT
+     ========================================== -->
+
+<script>
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+
+            // ==================================
+            // GET DATA
+            // ==================================
+
+            const numericLabelsElement =
+                document.getElementById(
+                    "numeric-labels-data"
+                );
+
+            const numericValuesElement =
+                document.getElementById(
+                    "numeric-values-data"
+                );
+
+            const categoryLabelsElement =
+                document.getElementById(
+                    "category-labels-data"
+                );
+
+            const categoryValuesElement =
+                document.getElementById(
+                    "category-values-data"
+                );
+
+
+            let numericLabels = [];
+
+            let numericValues = [];
+
+            let categoryLabels = [];
+
+            let categoryValues = [];
+
+
+            // ==================================
+            // PARSE NUMERICAL DATA
+            // ==================================
+
+            if (numericLabelsElement) {
+
+                numericLabels = JSON.parse(
+                    numericLabelsElement.textContent
+                );
+
+            }
+
+
+            if (numericValuesElement) {
+
+                numericValues = JSON.parse(
+                    numericValuesElement.textContent
+                );
+
+            }
+
+
+            // ==================================
+            // PARSE CATEGORY DATA
+            // ==================================
+
+            if (categoryLabelsElement) {
+
+                categoryLabels = JSON.parse(
+                    categoryLabelsElement.textContent
+                );
+
+            }
+
+
+            if (categoryValuesElement) {
+
+                categoryValues = JSON.parse(
+                    categoryValuesElement.textContent
+                );
+
+            }
+
+
+            // ==================================
+            // NUMERICAL BAR CHART
+            // ==================================
+
+            if (
+                numericLabels.length > 0 &&
+                numericValues.length > 0
+            ) {
+
+                const numericCanvas =
+                    document.getElementById(
+                        "numericChart"
+                    );
+
+
+                if (numericCanvas) {
+
+                    new Chart(
+                        numericCanvas,
+                        {
+
+                            type: "bar",
+
+                            data: {
+
+                                labels: numericLabels,
+
+                                datasets: [
+
+                                    {
+
+                                        label:
+                                            "Average Value",
+
+                                        data:
+                                            numericValues,
+
+                                        backgroundColor:
+                                            "rgba(139, 92, 246, 0.75)",
+
+                                        borderColor:
+                                            "#8b5cf6",
+
+                                        borderWidth: 1,
+
+                                        borderRadius: 8
+
+                                    }
+
+                                ]
+
+                            },
+
+
+                            options: {
+
+                                responsive: true,
+
+                                maintainAspectRatio:
+                                    false,
+
+
+                                plugins: {
+
+                                    legend: {
+
+                                        labels: {
+
+                                            color:
+                                                "#cbd5e1"
+
+                                        }
+
+                                    }
+
+                                },
+
+
+                                scales: {
+
+                                    x: {
+
+                                        ticks: {
+
+                                            color:
+                                                "#cbd5e1"
+
+                                        },
+
+                                        grid: {
+
+                                            color:
+                                                "rgba(255,255,255,0.05)"
+
+                                        }
+
+                                    },
+
+
+                                    y: {
+
+                                        ticks: {
+
+                                            color:
+                                                "#cbd5e1"
+
+                                        },
+
+                                        grid: {
+
+                                            color:
+                                                "rgba(255,255,255,0.05)"
+
+                                        }
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+                    );
+
+                }
+
+            }
+
+
+            // ==================================
+            // CATEGORY DOUGHNUT CHART
+            // ==================================
+
+            if (
+                categoryLabels.length > 0 &&
+                categoryValues.length > 0
+            ) {
+
+                const categoryCanvas =
+                    document.getElementById(
+                        "categoryChart"
+                    );
+
+
+                if (categoryCanvas) {
+
+                    new Chart(
+                        categoryCanvas,
+                        {
+
+                            type: "doughnut",
+
+                            data: {
+
+                                labels:
+                                    categoryLabels,
+
+                                datasets: [
+
+                                    {
+
+                                        data:
+                                            categoryValues,
+
+                                        backgroundColor: [
+
+                                            "#8b5cf6",
+                                            "#a78bfa",
+                                            "#7c3aed",
+                                            "#c084fc",
+                                            "#6d28d9",
+                                            "#9333ea",
+                                            "#6366f1",
+                                            "#818cf8",
+                                            "#a855f7",
+                                            "#d8b4fe",
+                                            "#5b21b6",
+                                            "#4c1d95"
+
+                                        ],
+
+                                        borderWidth: 2,
+
+                                        borderColor:
+                                            "#111827"
+
+                                    }
+
+                                ]
+
+                            },
+
+
+                            options: {
+
+                                responsive: true,
+
+                                maintainAspectRatio:
+                                    false,
+
+
+                                plugins: {
+
+                                    legend: {
+
+                                        position:
+                                            "bottom",
+
+                                        labels: {
+
+                                            color:
+                                                "#cbd5e1",
+
+                                            padding: 15
+
+                                        }
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+                    );
+
+                }
+
+            }
+
+        }
+
+    );
+
+</script>
+<!-- =====================================
+     ASK INSIGHTIQ
+     ===================================== -->
+
+<div class="card p-4 mb-5 ask-insight-card">
+
+    <div class="section-heading">
+
+        <div>
+
+            <h2>
+                <i class="bi bi-stars"></i>
+                Ask InsightIQ
+            </h2>
+
+            <p>
+                Ask questions about your uploaded dataset
+                and get instant business answers.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <form id="askForm">
+
+        <div class="row g-3">
+
+            <div class="col-lg-10">
+
+                <input
+                    type="text"
+                    id="questionInput"
+                    name="question"
+                    class="form-control insight-question"
+                    placeholder="Example: What is the highest value?"
+                    autocomplete="off"
+                >
+
+            </div>
+
+            <div class="col-lg-2">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary w-100 ask-button"
+                >
+
+                    <i class="bi bi-search"></i>
+
+                    Analyze
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+
+    <!-- Answer -->
+
+    <div
+        id="answerBox"
+        class="insight-answer mt-4"
+        style="display:none;"
+    >
+
+        <div class="answer-icon">
+
+            <i class="bi bi-stars"></i>
+
+        </div>
+
+        <div>
+
+            <h5>
+                InsightIQ Answer
+            </h5>
+
+            <p
+                id="answerText"
+                class="mb-0"
+            ></p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Example questions -->
+
+    <div class="example-questions mt-4">
+
+        <p class="mb-2">
+            <strong>Try asking:</strong>
+        </p>
+
+        <button
+            type="button"
+            class="example-question"
+            data-question="How many rows are in the dataset?"
+        >
+            How many rows?
+        </button>
+
+        <button
+            type="button"
+            class="example-question"
+            data-question="How many columns are there?"
+        >
+            How many columns?
+        </button>
+
+        <button
+            type="button"
+            class="example-question"
+            data-question="Are there any missing values?"
+        >
+            Any missing values?
+        </button>
+
+        <button
+            type="button"
+            class="example-question"
+            data-question="Which column has the highest average?"
+        >
+            Highest average?
+        </button>
+
+        <button
+            type="button"
+            class="example-question"
+            data-question="What is the highest value?"
+        >
+            Highest value?
+        </button>
+
+    </div>
+
+</div>
+{% endif %}
+
+{% endblock %}
