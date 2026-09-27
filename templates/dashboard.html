@@ -511,7 +511,74 @@
 
     {% endif %}
 
+    <!-- =====================================
+         SMART BUSINESS METRICS
+         ===================================== -->
 
+    {% if smart_metrics %}
+
+    <div class="card p-4 mb-5 smart-metrics-card">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>
+                    <i class="bi bi-lightning-charge-fill"></i>
+                    Smart Business Metrics
+                </h2>
+
+                <p>
+                    Key performance indicators automatically detected
+                    from your numerical data.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="row g-4">
+
+            {% for metric in smart_metrics %}
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="smart-metric-card">
+
+                    <div class="smart-metric-icon">
+
+                        <i class="bi {{ metric.icon }}"></i>
+
+                    </div>
+
+                    <div class="smart-metric-content">
+
+                        <p class="smart-metric-title">
+                            {{ metric.title }}
+                        </p>
+
+                        <h3>
+                            {{ metric.value }}
+                        </h3>
+
+                        <span class="smart-metric-column">
+                            {{ metric.column }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    {% endif %}
     <!-- =====================================
          INSIGHTIQ ANALYSIS
          ===================================== -->
